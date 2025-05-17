@@ -30,7 +30,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.saleor-api.rule=Host(`api.futuretools.app`)
-      - traefik.http.routers.saleor-api.entrypoints=web
+      # - traefik.http.routers.saleor-api.entrypoints=web
       - traefik.http.services.saleor-api.loadbalancer.server.port=8000
 
   dashboard:
@@ -43,7 +43,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.manual-dashboard-12345.rule=Host(`admin.futuretools.app`)
-      - traefik.http.routers.manual-dashboard-12345.entrypoints=web
+      # - traefik.http.routers.manual-dashboard-12345.entrypoints=web
       - traefik.http.services.manual-dashboard-service-12345.loadbalancer.server.port=8100
     environment:
       - API_URL=https://api.futuretools.app/graphql/
@@ -116,7 +116,7 @@ services:
     labels:
       - traefik.enable=true
       - traefik.http.routers.saleor-mailpit.rule=Host(`mail.futuretools.app`)
-      - traefik.http.routers.saleor-mailpit.entrypoints=web
+      # - traefik.http.routers.saleor-mailpit.entrypoints=web
       - traefik.http.services.saleor-mailpit.loadbalancer.server.port=8025
 
 volumes:
