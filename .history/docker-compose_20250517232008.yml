@@ -23,13 +23,11 @@ services:
       - backend.env
     environment:
       - JAEGER_AGENT_HOST=jaeger
-      - DASHBOARD_URL=http://admin.futuretools.app/
-      - ALLOWED_HOSTS=localhost,api,api.futuretools.app,admin.futuretools.app
-      - ALLOWED_CLIENT_HOSTS=admin.futuretools.app,dashboard.futuretools.app
-      - PUBLIC_URL=https://api.futuretools.app/
+      - DASHBOARD_URL=http://localhost:9000/
+      - ALLOWED_HOSTS=localhost,api
     labels:
       - traefik.enable=true
-      - traefik.http.routers.saleor-api.rule=Host(`api.futuretools.app`)
+      - traefik.http.routers.saleor-api.rule=Host(`api.example.com`)
       - traefik.http.routers.saleor-api.entrypoints=web
       - traefik.http.services.saleor-api.loadbalancer.server.port=8000
 
@@ -42,11 +40,9 @@ services:
       - dokploy-network
     labels:
       - traefik.enable=true
-      - traefik.http.routers.saleor-dashboard.rule=Host(`admin.futuretools.app`)
+      - traefik.http.routers.saleor-dashboard.rule=Host(`dashboard.example.com`)
       - traefik.http.routers.saleor-dashboard.entrypoints=web
       - traefik.http.services.saleor-dashboard.loadbalancer.server.port=80
-    environment:
-      - API_URL=https://api.futuretools.app/graphql/
 
   db:
     image: library/postgres:15-alpine
@@ -115,7 +111,7 @@ services:
       - saleor-backend-tier
     labels:
       - traefik.enable=true
-      - traefik.http.routers.saleor-mailpit.rule=Host(`mail.futuretools.app`)
+      - traefik.http.routers.saleor-mailpit.rule=Host(`mail.example.com`)
       - traefik.http.routers.saleor-mailpit.entrypoints=web
       - traefik.http.services.saleor-mailpit.loadbalancer.server.port=8025
 

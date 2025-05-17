@@ -23,10 +23,8 @@ services:
       - backend.env
     environment:
       - JAEGER_AGENT_HOST=jaeger
-      - DASHBOARD_URL=http://admin.futuretools.app/
+      - DASHBOARD_URL=http://localhost:9000/
       - ALLOWED_HOSTS=localhost,api,api.futuretools.app,admin.futuretools.app
-      - ALLOWED_CLIENT_HOSTS=admin.futuretools.app,dashboard.futuretools.app
-      - PUBLIC_URL=https://api.futuretools.app/
     labels:
       - traefik.enable=true
       - traefik.http.routers.saleor-api.rule=Host(`api.futuretools.app`)
@@ -45,8 +43,6 @@ services:
       - traefik.http.routers.saleor-dashboard.rule=Host(`admin.futuretools.app`)
       - traefik.http.routers.saleor-dashboard.entrypoints=web
       - traefik.http.services.saleor-dashboard.loadbalancer.server.port=80
-    environment:
-      - API_URL=https://api.futuretools.app/graphql/
 
   db:
     image: library/postgres:15-alpine
