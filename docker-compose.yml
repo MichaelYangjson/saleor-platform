@@ -42,9 +42,9 @@ services:
       - dokploy-network
     labels:
       - traefik.enable=true
-      - traefik.http.routers.unique-saleor-dashboard.rule=Host(`admin.futuretools.app`)
-      - traefik.http.routers.unique-saleor-dashboard.entrypoints=web
-      - traefik.http.services.unique-saleor-dashboard.loadbalancer.server.port=80
+      - traefik.http.routers.manual-dashboard-12345.rule=Host(`admin.futuretools.app`)
+      - traefik.http.routers.manual-dashboard-12345.entrypoints=web
+      - traefik.http.services.manual-dashboard-service-12345.loadbalancer.server.port=8100
     environment:
       - API_URL=https://api.futuretools.app/graphql/
 
