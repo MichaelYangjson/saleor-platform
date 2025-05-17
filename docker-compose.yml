@@ -56,7 +56,6 @@ services:
     restart: unless-stopped
     networks:
       - saleor-backend-tier
-       - dokploy-network
     volumes:
       - saleor-db:/var/lib/postgresql/data
       - ./replica_user.sql:/docker-entrypoint-initdb.d/replica_user.sql
@@ -81,7 +80,6 @@ services:
     restart: unless-stopped
     networks:
       - saleor-backend-tier
-      - dokploy-network
     env_file:
       - common.env
       - backend.env
@@ -105,7 +103,6 @@ services:
     restart: unless-stopped
     networks:
       - saleor-backend-tier
-      - dokploy-network
     volumes:
       - type: tmpfs
         target: /tmp
@@ -118,7 +115,6 @@ services:
     restart: unless-stopped
     networks:
       - saleor-backend-tier
-      - dokploy-network
     labels:
       - traefik.enable=true
       - traefik.http.routers.saleor-mailpit.rule=Host(`mail.futuretools.app`)
