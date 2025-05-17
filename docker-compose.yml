@@ -63,7 +63,6 @@ services:
     restart: unless-stopped
     networks:
       - saleor-backend-tier
-      - dokploy-network
     volumes:
       - saleor-redis:/data
 
