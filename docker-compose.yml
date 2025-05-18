@@ -43,7 +43,7 @@ services:
       - "traefik.http.routers.saleor-dashboard.rule=Host(`dashboard.futuretools.app`)"
       - "traefik.http.routers.saleor-dashboard.entrypoints=websecure"
       - "traefik.http.routers.saleor-dashboard.tls.certResolver=letsencrypt"
-      - "traefik.http.services.saleor-dashboard.loadbalancer.server.port=80"
+      - "traefik.http.services.saleor-dashboard.loadbalancer.server.port=9000"
 
   db:
     image: library/postgres:15-alpine
