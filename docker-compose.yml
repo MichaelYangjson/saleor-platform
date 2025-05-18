@@ -34,7 +34,7 @@ services:
   dashboard:
     image: ghcr.io/saleor/saleor-dashboard:latest
     ports:
-      - 9000:80
+      - 9000:9000
     restart: unless-stopped
     networks:
       - dokploy-network
