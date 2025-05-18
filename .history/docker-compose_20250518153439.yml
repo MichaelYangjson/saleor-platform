@@ -3,10 +3,11 @@ version: "3.4"
 services:
   api:
     image: ghcr.io/saleor/saleor:3.20
-    ports:
+    expose:
       - 8000
     restart: unless-stopped
     networks:
+      - saleor-backend-tier
       - dokploy-network
     stdin_open: true
     tty: true
@@ -22,8 +23,10 @@ services:
       - backend.env
     environment:
       - JAEGER_AGENT_HOST=jaeger
-      - DASHBOARD_URL=http://dashboard.futuretools.app/
-      - ALLOWED_HOSTS=localhost,api,api.futuretools.app
+      - DASHBOARD_URL=http://admin.futuretools.app/
+      - ALLOWED_HOSTS=localhost,api,api.futuretools.app,admin.futuretools.app
+      - ALLOWED_CLIENT_HOSTS=admin.futuretools.app,dashboard.futuretools.app
+      - PUBLIC_URL=https://api.futuretools.app/
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.saleor-api.rule=Host(`api.futuretools.app`)"
@@ -34,16 +37,19 @@ services:
   dashboard:
     image: ghcr.io/saleor/saleor-dashboard:latest
     ports:
-      - 9000:80
+      - "8100:8100"
     restart: unless-stopped
     networks:
+      - saleor-backend-tier
       - dokploy-network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.saleor-dashboard.rule=Host(`dashboard.futuretools.app`)"
+      - "traefik.http.routers.saleor-dashboard.rule=Host(`admin.futuretools.app`)"
       - "traefik.http.routers.saleor-dashboard.entrypoints=websecure"
       - "traefik.http.routers.saleor-dashboard.tls.certResolver=letsencrypt"
-      - "traefik.http.services.saleor-dashboard.loadbalancer.server.port=80"
+      - "traefik.http.services.saleor-dashboard.loadbalancer.server.port=8100"
+    environment:
+      - API_URL=https://api.futuretools.app/graphql/
 
   db:
     image: library/postgres:15-alpine
@@ -51,7 +57,7 @@ services:
       - 5432:5432
     restart: unless-stopped
     networks:
-      - dokploy-network
+      - saleor-backend-tier
     volumes:
       - saleor-db:/var/lib/postgresql/data
       - ./replica_user.sql:/docker-entrypoint-initdb.d/replica_user.sql
@@ -65,7 +71,7 @@ services:
       - 6379:6379
     restart: unless-stopped
     networks:
-      - dokploy-network
+      - saleor-backend-tier
     volumes:
       - saleor-redis:/data
 
@@ -74,7 +80,7 @@ services:
     command: celery -A saleor --app=saleor.celeryconf:app worker --loglevel=info -B
     restart: unless-stopped
     networks:
-      - dokploy-network
+      - saleor-backend-tier
     env_file:
       - common.env
       - backend.env
@@ -97,7 +103,7 @@ services:
       - "9411:9411"
     restart: unless-stopped
     networks:
-      - dokploy-network
+      - saleor-backend-tier
     volumes:
       - type: tmpfs
         target: /tmp
@@ -109,7 +115,7 @@ services:
       - 8025:8025 # web ui. Visit http://localhost:8025/ to check emails
     restart: unless-stopped
     networks:
-      - dokploy-network
+      - saleor-backend-tier
 
 volumes:
   saleor-db:
@@ -119,5 +125,8 @@ volumes:
   saleor-media:
 
 networks:
+  saleor-backend-tier:
+    driver: bridge
   dokploy-network:
     external: true
+

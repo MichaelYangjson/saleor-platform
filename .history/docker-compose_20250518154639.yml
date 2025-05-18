@@ -119,5 +119,7 @@ volumes:
   saleor-media:
 
 networks:
+  saleor-backend-tier:
+    driver: bridge
   dokploy-network:
     external: true

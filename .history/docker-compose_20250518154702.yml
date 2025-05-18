@@ -120,4 +120,5 @@ volumes:
 
 networks:
   dokploy-network:
+    driver: bridge
     external: true

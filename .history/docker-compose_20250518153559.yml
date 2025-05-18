@@ -3,7 +3,7 @@ version: "3.4"
 services:
   api:
     image: ghcr.io/saleor/saleor:3.20
-    ports:
+    expose:
       - 8000
     restart: unless-stopped
     networks:
@@ -22,8 +22,10 @@ services:
       - backend.env
     environment:
       - JAEGER_AGENT_HOST=jaeger
-      - DASHBOARD_URL=http://dashboard.futuretools.app/
-      - ALLOWED_HOSTS=localhost,api,api.futuretools.app
+      - DASHBOARD_URL=http://admin.futuretools.app/
+      - ALLOWED_HOSTS=localhost,api,api.futuretools.app,admin.futuretools.app
+      - ALLOWED_CLIENT_HOSTS=admin.futuretools.app,dashboard.futuretools.app
+      - PUBLIC_URL=https://api.futuretools.app/
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.saleor-api.rule=Host(`api.futuretools.app`)"
@@ -34,16 +36,18 @@ services:
   dashboard:
     image: ghcr.io/saleor/saleor-dashboard:latest
     ports:
-      - 9000:80
+      - "8100:8100"
     restart: unless-stopped
     networks:
       - dokploy-network
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.saleor-dashboard.rule=Host(`dashboard.futuretools.app`)"
+      - "traefik.http.routers.saleor-dashboard.rule=Host(`admin.futuretools.app`)"
       - "traefik.http.routers.saleor-dashboard.entrypoints=websecure"
       - "traefik.http.routers.saleor-dashboard.tls.certResolver=letsencrypt"
-      - "traefik.http.services.saleor-dashboard.loadbalancer.server.port=80"
+      - "traefik.http.services.saleor-dashboard.loadbalancer.server.port=8100"
+    environment:
+      - API_URL=https://api.futuretools.app/graphql/
 
   db:
     image: library/postgres:15-alpine
@@ -121,3 +125,4 @@ volumes:
 networks:
   dokploy-network:
     external: true
+
