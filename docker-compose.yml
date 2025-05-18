@@ -23,7 +23,7 @@ services:
     environment:
       - JAEGER_AGENT_HOST=jaeger
       - DASHBOARD_URL=http://dashboard.futuretools.app/
-      - ALLOWED_HOSTS=localhost,api,api.futuretools.app
+      - ALLOWED_HOSTS=localhost,api,api.futuretools.app,dashboard.futuretools.app
     labels:
       - "traefik.enable=true"
       - "traefik.http.routers.saleor-api.rule=Host(`api.futuretools.app`)"
